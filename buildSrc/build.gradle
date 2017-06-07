@@ -1,0 +1,67 @@
+apply plugin: 'groovy'
+
+dependencies {
+    //gradle sdk
+    compile gradleApi()
+    //groovy sdk
+    compile localGroovy()
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+
+//groovy 学习
+task hello<<{
+    println("hello")
+}
+
+class Student{
+    String name
+}
+
+task showStudentInfo<< {
+    def student = new Student()
+    student.name = "xie ning tao"
+    println("my name is ${student.name}")
+}
+
+
+task showMap<<{
+    def map=["firstKey":"firstValue","secondKey":"secondValue"]
+    map.each {
+        println("key: "+it.key+" value: "+it.value)
+    }
+}
+
+task showList<<{
+    def list=["first","second","third"]
+    list.each {
+        println(it)
+    }
+}
+
+task invokeClourse<<{
+    def returnValue=doClosure {
+        println("student name: "+it.name)
+    }
+
+    def simpleClosure={student->
+        println("student name: "+student.name)
+    }
+
+    def newStudent=new Student();
+    newStudent.name="new student";
+    simpleClosure(newStudent)
+
+    println("return value: "+returnValue)
+}
+
+def doClosure(Closure closure){
+    def student=new Student();
+    student.name="test"
+    closure(student)
+    "this is closure test"
+}

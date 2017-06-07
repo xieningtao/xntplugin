@@ -1,0 +1,7 @@
+
+
+project.subprojects { project->
+    project.beforeEvaluate {
+        println("$project.name project before evluate")
+    }
+}

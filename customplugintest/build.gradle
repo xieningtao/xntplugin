@@ -1,0 +1,66 @@
+apply plugin: 'java'
+
+
+apply plugin: 'customPlugin'
+
+pluginExtension {
+    customName "hello"
+}
+
+apply plugin: "maven-publish"
+
+publishing {
+    publications {
+        fileTree("./libs").each { file ->
+            def newName = file.name.substring(0, file.name.length() - 4);
+            "myPublish$newName"(MavenPublication) {
+                println("name: " + file.name)
+                artifact "./libs/$file.name"
+                groupId "com.netease"
+                artifactId "$newName"
+                version "1.0.0"
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "$projectDir/repo"
+
+            credentials {
+                username "username"
+                password "password"
+            }
+        }
+    }
+}
+
+
+
+project.afterEvaluate{
+    project->println("project name: "+project.name)
+}
+
+
+
+gradle.taskGraph.beforeTask { Task task ->
+    println "executing $task ..."
+}
+
+tasks.whenTaskAdded { task ->
+    println("$task create...")
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+    if (state.failure) {
+        println "FAILED"
+    }
+    else {
+        println "done"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
