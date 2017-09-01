@@ -1,5 +1,24 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+//        maven {
+//            url uri('D:\\gitRepository\\tools\\xntplugin\\repo\\') //插件所在的目录
+//        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+//        classpath 'com.sf.aop:aopaspect:1.0.0' //添加依赖
+    }
+}
 
-
+allprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+    }
+}
 project.subprojects { project->
     project.beforeEvaluate {
         println("$project.name project before evluate")

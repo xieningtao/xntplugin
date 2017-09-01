@@ -9,6 +9,16 @@ public class CustomPluginExtension {
     private String customName;
     private String id;
 
+    private Student student;
+
+    Student getStudent() {
+        return student
+    }
+
+    void setStudent(Student student) {
+        this.student = student
+    }
+
     public void setCustomName(String customName) {
         this.customName = customName;
     }

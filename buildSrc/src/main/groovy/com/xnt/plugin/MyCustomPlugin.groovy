@@ -5,7 +5,6 @@ import org.gradle.api.Project
 
 class MyCustomPlugin implements Plugin<Project> {
     void apply(Project project) {
-
         project.extensions.create("pluginExtension",CustomPluginExtension.class);
 
         project.task('myTask') << {
@@ -13,7 +12,8 @@ class MyCustomPlugin implements Plugin<Project> {
         }
 
         project.task("name")<<{
-            println("my name is "+project.pluginExtension.customName)
+            println("my name is "+project.pluginExtension.customName+" student name: "+project.pluginExtension.student.name)
         }
+
     }
 }

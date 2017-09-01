@@ -1,0 +1,64 @@
+apply plugin: 'groovy'
+
+dependencies {
+    //gradle sdk
+    compile gradleApi()
+    //groovy sdk
+    compile localGroovy()
+
+    compile 'org.aspectj:aspectjrt:1.8.9'
+    compile 'org.aspectj:aspectjtools:1.8.9'
+    compile 'com.android.tools.build:gradle:2.1.0'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+//apply plugin: 'maven-publish'
+
+//task javadocJar(type: Jar, dependsOn: groovydoc) {
+//    classifier = 'javadoc'
+//    from "${buildDir}/javadoc"
+//}
+//
+//task sourcesJar(type: Jar) {
+//    from sourceSets.main.allSource
+//    classifier = 'sources'
+//}
+//
+//publishing{
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//
+//            artifact sourcesJar
+//            artifact javadocJar
+//            groupId 'com.sf.aop'
+//            artifactId 'aopaspect'
+//            version '1.0.1'
+//
+//        }
+//    }
+//
+//    repositories{
+//        maven {
+//            // change to point to your repo, e.g. http://my.org/repo
+//            url "D:\\gitRepository\\tools\\xntplugin\\repo\\"
+//        }
+//    }
+//}
+
+apply plugin: 'maven'
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://D:\\gitRepository\\tools\\xntplugin\\repo\\")
+            pom.groupId="com.sf.aop"
+            pom.artifactId ="aopaspect"
+            pom.version="1.0.0"
+        }
+    }
+}
+

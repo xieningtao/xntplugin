@@ -5,14 +5,17 @@ dependencies {
     compile gradleApi()
     //groovy sdk
     compile localGroovy()
+
+    compile 'com.android.tools.build:gradle:2.2.2'
+    compile group: 'org.javassist', name: 'javassist', version: '3.22.0-CR2'
+//    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
 }
 
 repositories {
     mavenCentral()
+    jcenter()
     mavenLocal()
 }
-
-
 //groovy 学习
 task hello<<{
     println("hello")
