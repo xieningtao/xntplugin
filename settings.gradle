@@ -1,1 +1,1 @@
-include  ':buidSrc', ':aoptest'
+include  ':aoptest'
