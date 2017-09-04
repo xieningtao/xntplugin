@@ -13,25 +13,26 @@ public class Student {
     private int mId;
     private String  mName;
 
-    public int getmId() {
+    public int getId() {
         return mId;
     }
 
-    public void setmId(int mId) {
+    public void setId(int id) {
         this.mId = mId;
     }
 
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
-    public void setmName(String mName) {
+    public void setName(String name) {
         this.mName = mName;
     }
 
     @AopTime
     public void printInfo(String mode){
         Log.e(TAG,"name: "+mName+" id: "+mId+" mode: "+mode);
+        throw new NullPointerException("this is null point test");
     }
 
     @AopTime
