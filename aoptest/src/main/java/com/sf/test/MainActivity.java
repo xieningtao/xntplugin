@@ -13,7 +13,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.test_aop_bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Student().printInfo("hello");
+                new Student().printInfo("hello",100,"xie ning tao");
             }
         });
     }
