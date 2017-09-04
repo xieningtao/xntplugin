@@ -32,7 +32,7 @@ public class Student {
     @AopTime
     public void printInfo(String mode){
         Log.e(TAG,"name: "+mName+" id: "+mId+" mode: "+mode);
-        throw new NullPointerException("this is null point test");
+//        throw new NullPointerException("this is null point test");
     }
 
     @AopTime

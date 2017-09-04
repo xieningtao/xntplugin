@@ -4,10 +4,13 @@ import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
 import javassist.CtNewMethod
+import javassist.bytecode.CodeAttribute
+import javassist.bytecode.LocalVariableAttribute
+import javassist.bytecode.MethodInfo
 import org.gradle.api.Project
+import javassist.Modifier
 
 import java.lang.annotation.Annotation
-
 /**
  * Created by G8876 on 2017/9/1.
  */
@@ -43,6 +46,8 @@ public class InjectTime {
                             String methodName = ctMethod.getName();
                             methodName = methodName.substring(methodName.lastIndexOf(".") + 1, methodName.length())
                             project.logger.error("methodName: " + methodName)
+
+
                             for (Annotation annotation : ctMethod.getAnnotations()) {
                                 if(annotation==null){
                                     break;
@@ -53,9 +58,41 @@ public class InjectTime {
                                 if (canonicalName.equals(TIME_ANNOTATION)) {
                                     project.logger.error("=============start to modify method: " + methodName);
 
+                                    //添加打印方法参数的
+                                    CtClass[] params = new CtClass[ctMethod.getParameterTypes().length];
+                                    for (int i = 0; i < ctMethod.getParameterTypes().length; i++) {
+                                        params[i] = sPool.getCtClass(ctMethod.getParameterTypes()[i].getName());
+                                    }
 
+                                    MethodInfo methodInfo = ctMethod.getMethodInfo();
+                                    CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
+                                    LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute
+                                            .getAttribute(LocalVariableAttribute.tag);
+                                    int pos = Modifier.isStatic(ctMethod.getModifiers()) ? 0 : 1;
+                                    String[] paramNames = new String[ctMethod.getParameterTypes().length];
+                                    StringBuilder paramsStr=new StringBuilder();
+                                    if (paramNames.length != 0) {
+                                        paramsStr.append("\nSystem.out.println(");
+
+                                    for (int i = 0; i < paramNames.length; i++) {
+                                        paramNames[i] = attr.variableName(i + pos);
+                                        if(i==0) {
+                                            paramsStr.append("\"").append(paramNames[i]).append(":\"").append("+")
+                                                    .append(paramNames[i])
+                                        }else {
+                                            paramsStr.append("+").append("\"").append(paramNames[i])
+                                                    .append(":\"").append("+").append(paramNames[i])
+                                        }
+                                    }
+                                    paramsStr.append(");\n");
+                                    }
+
+                                    //=======================
+
+                                    project.logger.error("params: "+paramsStr.toString());
                                     String newMethodName = methodName + '$' + "Impl";
                                     ctMethod.setName(newMethodName);//旧的方法换一个名字，但是还是原来的实现
+                                    ctMethod.insertBefore(paramsStr.toString());
                                     project.logger.error("newMethodName: " + newMethodName);
                                     CtMethod newMethod = CtNewMethod.copy(ctMethod, methodName, ctClass, null);
                                     project.logger.error("copy method");
@@ -64,21 +101,17 @@ public class InjectTime {
                                     String prefixStatement = "\nlong startTime=System.currentTimeMillis();";
                                     String postfixStatement = "\nlong endTime=System.currentTimeMillis();";
 
+
                                     String outputStr = "\nSystem.out.println(\"this method" + className + "." + methodName + " cost:\"+(endTime-startTime)+\".ms\");";
-                                    project.logger.error("make statements");
                                     bodyStr.append("{");
+//                                    bodyStr.append(paramsStr);
                                     bodyStr.append(prefixStatement);
-                                    project.logger.error("add prefix statements");
                                     bodyStr.append(newMethodName + "(" + '$$' + ");\n");
-                                    project.logger.error("add newMethod statements");
                                     bodyStr.append(postfixStatement);
                                     bodyStr.append(outputStr);
-                                    project.logger.error("add time statements");
                                     bodyStr.append("}");
-                                    project.logger.error("construct body");
                                     newMethod.setBody(bodyStr.toString());
                                     ctClass.addMethod(newMethod);
-
                                     project.logger.error("=============end to modify method: " + methodName);
                                     modifyMethod = true;
                                 }
