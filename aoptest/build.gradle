@@ -22,6 +22,20 @@ android {
     }
 }
 
-apply plugin: 'customAopAspect'
+
+//aspectjx=============================
+dependencies{
+    compile 'org.aspectj:aspectjrt:1.8.9'
+}
+apply plugin: 'android-aspectjx'
+aspectjx {
+    //includes the libs that you want to weave
+    includeJarFilter 'universal-image-loader', 'AspectJX-Demo/library'
+
+    //excludes the libs that you don't want to weave
+    excludeJarFilter 'universal-image-loader'
+}
+//=============================
+//apply plugin: 'customAopAspect'
 
 
